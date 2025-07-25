@@ -6,21 +6,21 @@
 /*   By: hnogi <hnogi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 22:02:06 by hnogi             #+#    #+#             */
-/*   Updated: 2025/07/25 18:44:33 by hnogi            ###   ########.fr       */
+/*   Updated: 2025/07/25 19:38:38 by hnogi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char	*ft_free(char *buffer, char *buf)
+static char	*ft_free(char *res, char *buf)
 {
 	char	*temp;
 
-	temp = ft_strjoin(buffer, buf);
+	temp = ft_strjoin(res, buf);
 	if (!temp)
 		return (NULL);
-	if (buffer)
-		free(buffer);
+	if (res)
+		free(res);
 	return (temp);
 }
 
@@ -104,15 +104,15 @@ static char	*read_file(int fd, char *res)
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
+	static char	*res;
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buffer = read_file(fd, buffer);
-	if (!buffer)
+	res = read_file(fd, res);
+	if (!res)
 		return (NULL);
-	line = ft_line(buffer);
-	buffer = ft_next(buffer);
+	line = ft_line(res);
+	res = ft_next(res);
 	return (line);
 }
