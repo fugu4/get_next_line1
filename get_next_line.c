@@ -6,7 +6,7 @@
 /*   By: hnogi <hnogi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 22:02:06 by hnogi             #+#    #+#             */
-/*   Updated: 2025/07/25 21:05:51 by hnogi            ###   ########.fr       */
+/*   Updated: 2025/07/25 21:08:34 by hnogi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static char	*ft_next(char *buffer)
 {
 	int		i;
 	int		j;
-	char	*next_buffer;
+	char	*next_buf;
 
 	i = 0;
 	while (buffer[i] && buffer[i] != '\n')
@@ -38,15 +38,15 @@ static char	*ft_next(char *buffer)
 		free(buffer);
 		return (NULL);
 	}
-	next_buffer = ft_calloc((ft_strlen(buffer) - i + 1), sizeof(char));
-	if (!next_buffer)
+	next_buf = ft_calloc((ft_strlen(buffer) - i + 1), sizeof(char));
+	if (!next_buf)
 		return (NULL);
 	i++;
 	j = 0;
 	while (buffer[i])
-		next_buffer[j++] = buffer[i++];
+		next_buf[j++] = buffer[i++];
 	free(buffer);
-	return (next_buffer);
+	return (next_buf);
 }
 
 static char	*ft_line(char *buffer)
