@@ -6,21 +6,21 @@
 /*   By: hnogi <hnogi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 22:02:06 by hnogi             #+#    #+#             */
-/*   Updated: 2025/07/25 19:38:38 by hnogi            ###   ########.fr       */
+/*   Updated: 2025/07/25 20:44:18 by hnogi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char	*ft_free(char *res, char *buf)
+static char	*ft_free(char *buffer, char *str)
 {
 	char	*temp;
 
-	temp = ft_strjoin(res, buf);
+	temp = ft_strjoin(buffer, str);
 	if (!temp)
 		return (NULL);
-	if (res)
-		free(res);
+	if (buffer)
+		free(buffer);
 	return (temp);
 }
 
@@ -73,46 +73,46 @@ static char	*ft_line(char *buffer)
 	return (line);
 }
 
-static char	*read_file(int fd, char *res)
+static char	*read_file(int fd, char *buffer)
 {
-	char	*buffer;
+	char	*str;
 	int		byte_read;
 
-	if (!res)
-		res = ft_calloc(1, 1);
-	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (!buffer || !res)
+	if (!buffer)
+		buffer = ft_calloc(1, 1);
+	str = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	if (!str || !buffer)
 		return (NULL);
 	byte_read = 1;
 	while (byte_read > 0)
 	{
-		byte_read = read(fd, buffer, BUFFER_SIZE);
+		byte_read = read(fd, str, BUFFER_SIZE);
 		if (byte_read == -1)
 		{
+			free(str);
 			free(buffer);
-			free(res);
 			return (NULL);
 		}
-		buffer[byte_read] = 0;
-		res = ft_free(res, buffer);
-		if (ft_strchr(buffer, '\n'))
+		str[byte_read] = 0;
+		buffer = ft_free(buffer, str);
+		if (ft_strchr(str, '\n'))
 			break ;
 	}
-	free(buffer);
-	return (res);
+	free(str);
+	return (buffer);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*res;
+	static char	*buffer;
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	res = read_file(fd, res);
-	if (!res)
+	buffer = read_file(fd, buffer);
+	if (!buffer)
 		return (NULL);
-	line = ft_line(res);
-	res = ft_next(res);
+	line = ft_line(buffer);
+	buffer = ft_next(buffer);
 	return (line);
 }
