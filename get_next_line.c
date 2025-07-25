@@ -6,7 +6,7 @@
 /*   By: hnogi <hnogi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 22:02:06 by hnogi             #+#    #+#             */
-/*   Updated: 2025/07/25 15:06:55 by hnogi            ###   ########.fr       */
+/*   Updated: 2025/07/25 18:44:33 by hnogi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@ static char	*ft_free(char *buffer, char *buf)
 	char	*temp;
 
 	temp = ft_strjoin(buffer, buf);
-	free(buffer);
+	if (!temp)
+		return (NULL);
+	if (buffer)
+		free(buffer);
 	return (temp);
 }
 
@@ -36,6 +39,8 @@ static char	*ft_next(char *buffer)
 		return (NULL);
 	}
 	line = ft_calloc((ft_strlen(buffer) - i + 1), sizeof(char));
+	if (!line)
+		return (NULL);
 	i++;
 	j = 0;
 	while (buffer[i])
@@ -55,6 +60,8 @@ static char	*ft_line(char *buffer)
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
 	line = ft_calloc(i + 2, sizeof(char));
+	if (!line)
+		return (NULL);
 	i = 0;
 	while (buffer[i] && buffer[i] != '\n')
 	{
@@ -74,7 +81,7 @@ static char	*read_file(int fd, char *res)
 	if (!res)
 		res = ft_calloc(1, 1);
 	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (!buffer)
+	if (!buffer || !res)
 		return (NULL);
 	byte_read = 1;
 	while (byte_read > 0)

@@ -6,7 +6,7 @@
 /*   By: hnogi <hnogi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 22:02:03 by hnogi             #+#    #+#             */
-/*   Updated: 2025/07/25 14:59:14 by hnogi            ###   ########.fr       */
+/*   Updated: 2025/07/25 18:45:12 by hnogi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@ void	*ft_calloc(size_t count, size_t size)
 	size_t	total;
 	size_t	i;
 
+	if (count == 0 || size == 0)
+	{
+		count = 1;
+		size = 1;
+	}
 	total = size * count;
 	res = malloc(total);
 	if (!res)
@@ -69,8 +74,14 @@ char	*ft_strjoin(char *s1, char *s2)
 
 	i = 0;
 	j = 0;
+	if (!s1 && !s2)
+		return (NULL);
+	if (!s1)
+		return (ft_strdup(s2));
+	if (!s2)
+		return (ft_strdup(s1));
 	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!str || !s1 || !s2)
+	if (!str)
 		return (NULL);
 	while (s1[i])
 	{
@@ -78,10 +89,29 @@ char	*ft_strjoin(char *s1, char *s2)
 		i++;
 	}
 	while (s2[j])
+		str[i++] = s2[j++];
+	str[i] = '\0';
+	return (str);
+}
+
+char	*ft_strdup(const char *s)
+{
+	size_t	len;
+	size_t	i;
+	char	*str;
+
+	if (!s)
+		return (NULL);
+	i = 0;
+	len = ft_strlen(s);
+	str = malloc(len + 1);
+	if (!str)
+		return (NULL);
+	while (i < len)
 	{
-		str[i + j] = s2[j];
-		j++;
+		str[i] = s[i];
+		i++;
 	}
-	str[i + j] = '\0';
+	str[len] = '\0';
 	return (str);
 }
