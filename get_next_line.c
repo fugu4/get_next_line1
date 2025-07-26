@@ -6,7 +6,7 @@
 /*   By: hnogi <hnogi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 22:02:06 by hnogi             #+#    #+#             */
-/*   Updated: 2025/07/26 17:25:22 by hnogi            ###   ########.fr       */
+/*   Updated: 2025/07/26 19:06:57 by hnogi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,10 @@ char	*get_next_line(int fd)
 
 	byte_read = 1;
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (free(buffer), buffer = NULL, NULL);
+	{
+		return (free(buffer), NULL);
+		buffer = NULL;
+	}
 	buffer = read_file(fd, &buffer, byte_read);
 	if (!buffer)
 		return (NULL);
