@@ -6,7 +6,7 @@
 /*   By: hnogi <hnogi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 22:02:06 by hnogi             #+#    #+#             */
-/*   Updated: 2025/07/26 14:59:25 by hnogi            ###   ########.fr       */
+/*   Updated: 2025/07/26 17:25:22 by hnogi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,40 +74,45 @@ static char	*ft_line(char *buffer)
 	return (line);
 }
 
-static char	*read_file(int fd, char *buffer)
+static char	*read_file(int fd, char **buffer, ssize_t byte_read)
 {
 	char	*str;
-	int		byte_read;
 
-	if (!buffer)
-		buffer = ft_calloc(1, 1);
 	str = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (!str || !buffer)
-		return (free(str), free(buffer), NULL);
-	byte_read = 1;
+	if (!str)
+	{
+		if (*buffer)
+		{
+			free(*buffer);
+			*buffer = NULL;
+		}
+		return (NULL);
+	}
 	while (byte_read > 0)
 	{
 		byte_read = read(fd, str, BUFFER_SIZE);
 		if (byte_read == -1)
-			return (free(str), free(buffer), NULL);
+			return (free(str), free(*buffer), NULL);
 		str[byte_read] = 0;
-		buffer = ft_free(buffer, str);
-		if (!buffer)
+		*buffer = ft_free(*buffer, str);
+		if (!*buffer)
 			return (free(str), NULL);
 		if (ft_strchr(str, '\n'))
 			break ;
 	}
-	return (free(str), buffer);
+	return (free(str), *buffer);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
+	static char	*buffer = NULL;
 	char		*line;
+	ssize_t		byte_read;
 
+	byte_read = 1;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (free(buffer), buffer = NULL, NULL);
-	buffer = read_file(fd, buffer);
+	buffer = read_file(fd, &buffer, byte_read);
 	if (!buffer)
 		return (NULL);
 	line = ft_line(buffer);

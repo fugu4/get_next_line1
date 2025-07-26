@@ -6,11 +6,12 @@
 /*   By: hnogi <hnogi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 22:02:03 by hnogi             #+#    #+#             */
-/*   Updated: 2025/07/25 18:56:58 by hnogi            ###   ########.fr       */
+/*   Updated: 2025/07/26 16:09:47 by hnogi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 void	*ft_calloc(size_t count, size_t size)
 {
