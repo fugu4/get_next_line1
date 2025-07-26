@@ -6,19 +6,23 @@
 /*   By: hnogi <hnogi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 22:02:06 by hnogi             #+#    #+#             */
-/*   Updated: 2025/07/25 21:08:34 by hnogi            ###   ########.fr       */
+/*   Updated: 2025/07/26 14:59:25 by hnogi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char	*ft_free(char *buffer, char *str)
+static char	*ft_free(char *buffer, char *buf)
 {
 	char	*temp;
 
-	temp = ft_strjoin(buffer, str);
+	temp = ft_strjoin(buffer, buf);
 	if (!temp)
+	{
+		if (buffer)
+			free(buffer);
 		return (NULL);
+	}
 	if (buffer)
 		free(buffer);
 	return (temp);
@@ -34,13 +38,10 @@ static char	*ft_next(char *buffer)
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
 	if (buffer[i] == '\0')
-	{
-		free(buffer);
-		return (NULL);
-	}
+		return (free(buffer), NULL);
 	next_buf = ft_calloc((ft_strlen(buffer) - i + 1), sizeof(char));
 	if (!next_buf)
-		return (NULL);
+		return (free(buffer), NULL);
 	i++;
 	j = 0;
 	while (buffer[i])
@@ -82,24 +83,21 @@ static char	*read_file(int fd, char *buffer)
 		buffer = ft_calloc(1, 1);
 	str = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!str || !buffer)
-		return (NULL);
+		return (free(str), free(buffer), NULL);
 	byte_read = 1;
 	while (byte_read > 0)
 	{
 		byte_read = read(fd, str, BUFFER_SIZE);
 		if (byte_read == -1)
-		{
-			free(str);
-			free(buffer);
-			return (NULL);
-		}
+			return (free(str), free(buffer), NULL);
 		str[byte_read] = 0;
 		buffer = ft_free(buffer, str);
+		if (!buffer)
+			return (free(str), NULL);
 		if (ft_strchr(str, '\n'))
 			break ;
 	}
-	free(str);
-	return (buffer);
+	return (free(str), buffer);
 }
 
 char	*get_next_line(int fd)
@@ -108,7 +106,7 @@ char	*get_next_line(int fd)
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
+		return (free(buffer), buffer = NULL, NULL);
 	buffer = read_file(fd, buffer);
 	if (!buffer)
 		return (NULL);
