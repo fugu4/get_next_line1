@@ -1,22 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   gnl.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hnogi <hnogi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 22:02:06 by hnogi             #+#    #+#             */
-/*   Updated: 2025/07/26 14:59:25 by hnogi            ###   ########.fr       */
+/*   Updated: 2025/11/08 17:57:33 by hnogi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "gnl.h"
 
-static char	*ft_free(char *buffer, char *buf)
+static char	*gnl_free(char *buffer, char *buf)
 {
 	char	*temp;
 
-	temp = ft_strjoin(buffer, buf);
+	temp = gnl_strjoin(buffer, buf);
 	if (!temp)
 	{
 		if (buffer)
@@ -28,7 +28,7 @@ static char	*ft_free(char *buffer, char *buf)
 	return (temp);
 }
 
-static char	*ft_next(char *buffer)
+static char	*gnl_next(char *buffer)
 {
 	int		i;
 	int		j;
@@ -39,7 +39,7 @@ static char	*ft_next(char *buffer)
 		i++;
 	if (buffer[i] == '\0')
 		return (free(buffer), NULL);
-	next_buf = ft_calloc((ft_strlen(buffer) - i + 1), sizeof(char));
+	next_buf = gnl_calloc((gnl_strlen(buffer) - i + 1), sizeof(char));
 	if (!next_buf)
 		return (free(buffer), NULL);
 	i++;
@@ -50,7 +50,7 @@ static char	*ft_next(char *buffer)
 	return (next_buf);
 }
 
-static char	*ft_line(char *buffer)
+static char	*gnl_line(char *buffer)
 {
 	char	*line;
 	int		i;
@@ -60,7 +60,7 @@ static char	*ft_line(char *buffer)
 		return (NULL);
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
-	line = ft_calloc(i + 2, sizeof(char));
+	line = gnl_calloc(i + 2, sizeof(char));
 	if (!line)
 		return (NULL);
 	i = 0;
@@ -80,8 +80,8 @@ static char	*read_file(int fd, char *buffer)
 	int		byte_read;
 
 	if (!buffer)
-		buffer = ft_calloc(1, 1);
-	str = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+		buffer = gnl_calloc(1, 1);
+	str = gnl_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!str || !buffer)
 		return (free(str), free(buffer), NULL);
 	byte_read = 1;
@@ -91,10 +91,10 @@ static char	*read_file(int fd, char *buffer)
 		if (byte_read == -1)
 			return (free(str), free(buffer), NULL);
 		str[byte_read] = 0;
-		buffer = ft_free(buffer, str);
+		buffer = gnl_free(buffer, str);
 		if (!buffer)
 			return (free(str), NULL);
-		if (ft_strchr(str, '\n'))
+		if (gnl_strchr(str, '\n'))
 			break ;
 	}
 	return (free(str), buffer);
@@ -110,7 +110,7 @@ char	*get_next_line(int fd)
 	buffer = read_file(fd, buffer);
 	if (!buffer)
 		return (NULL);
-	line = ft_line(buffer);
-	buffer = ft_next(buffer);
+	line = gnl_line(buffer);
+	buffer = gnl_next(buffer);
 	return (line);
 }
